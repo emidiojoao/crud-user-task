@@ -1,5 +1,6 @@
 package com.senai.task.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -13,5 +14,8 @@ public class UserDto {
     @Email
     @NotBlank(message = "o email não pode ser vazio!")
     private String email;
+
+    @JsonIgnore
+    private Boolean sucesso;
 
 }
