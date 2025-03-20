@@ -37,7 +37,7 @@ public class UserService {
         Optional<UserModel> obterEmail = repository.findByEmail(dados.getEmail());
 
         if(obterEmail.isPresent()){
-            mensagem.setMensagem("[ERRO] - Já existe um usuário com esse login");
+            mensagem.setMensagem("[ERRO] - Já existe um usuário com esse email");
             mensagem.setSucesso(false);
             return mensagem;
         }
@@ -62,12 +62,21 @@ public class UserService {
         }
 
         UserModel userModel = usuarioPesquisado.get();
+        Optional<UserModel> usuarioExistente = repository.findByEmail(userDto.getEmail());
+            if(usuarioExistente.isPresent()){
+                if(!usuarioExistente.get().getId().equals(usuarioPesquisado.get().getId())){
+
+                mensagem.setMensagem("[ERRO] - Já existe um usuário com esse email");
+                mensagem.setSucesso(false);
+                return mensagem;
+                }
+            }
+
         userModel.setNome(userDto.getNome());
         userModel.setEmail(userDto.getEmail());
         repository.save(userModel);
         mensagem.setMensagem("Usuário atualizado!");
         mensagem.setSucesso(true);
-
         return mensagem;
     }
 
