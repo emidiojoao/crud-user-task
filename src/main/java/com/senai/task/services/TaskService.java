@@ -10,6 +10,7 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.plaf.OptionPaneUI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,6 +89,12 @@ public class TaskService {
             mensagem.setMensagem("[ERRO] - Usuário não encotrado!");
             mensagem.setSucesso(false);
             return mensagem;
+        }
+
+        Optional<TaskModel> validarData = taskRepository.findByDateAndEmail(taskDto.getDataAgendamento(), taskDto.getEmailUsuario());
+        if(validarData.isPresent()){
+            mensagem.setMensagem("[ERRO] - Esse usuário ja possui uma tarefa para essa data!");
+            mensagem.setSucesso(false);
         }
 
         taskModel.setNome(taskDto.getNome());
