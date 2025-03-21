@@ -3,6 +3,7 @@ package com.senai.task.services;
 import com.senai.task.dtos.MensagemDto;
 import com.senai.task.dtos.UserDto;
 import com.senai.task.models.UserModel;
+import com.senai.task.repositories.TaskRepository;
 import com.senai.task.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class UserService {
 
     @Autowired
     UserRepository repository;
+
+    @Autowired
+    TaskRepository taskRepository;
 
     //--Listar todos os usuários
     public List<UserDto> obterUsuarios(){
@@ -104,6 +108,13 @@ public class UserService {
         Optional<UserModel> usuarioPesquisado = repository.findByEmail(email);
         if (usuarioPesquisado.isEmpty()){
             mensagem.setMensagem("Usuário não encontrado");
+            mensagem.setSucesso(false);
+            return mensagem;
+        }
+
+        boolean temTarefa = taskRepository.existsByUserEmail(email);
+        if(!temTarefa){
+            mensagem.setMensagem("Usuário vinculado a uma tarefa!");
             mensagem.setSucesso(false);
             return mensagem;
         }

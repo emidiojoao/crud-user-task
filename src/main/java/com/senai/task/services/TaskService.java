@@ -52,6 +52,13 @@ public class TaskService {
             return mensagem;
         }
 
+        Optional<TaskModel> validarDataExistente = taskRepository.findByDateAndEmail(taskDto.getDataAgendamento(), taskDto.getEmailUsuario());
+        if(validarDataExistente.isPresent()){
+            mensagem.setMensagem("[ERRO] - Esse usuário ja tem uma tarefa agendada para essa data!");
+            mensagem.setSucesso(false);
+            return mensagem;
+        }
+
         taskModel.setNome(taskDto.getNome());
         taskModel.setDescricao(taskDto.getDescricao());
         taskModel.setDataDeAgendamento(taskDto.getDataAgendamento());
