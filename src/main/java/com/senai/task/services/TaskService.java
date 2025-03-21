@@ -6,6 +6,7 @@ import com.senai.task.models.TaskModel;
 import com.senai.task.models.UserModel;
 import com.senai.task.repositories.TaskRepository;
 import com.senai.task.repositories.UserRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,9 +65,16 @@ public class TaskService {
     }
 
     //--AtualizarTarefa
-    public MensagemDto atualizarTarefa(TaskDto taskDto){
+    public MensagemDto atualizarTarefa(Long id, TaskDto taskDto){
         MensagemDto mensagem = new MensagemDto();
         TaskModel taskModel = new TaskModel();
+
+        Optional<TaskModel> obterTarefaPorId = taskRepository.findById(id);
+        if(obterTarefaPorId.isEmpty()){
+            mensagem.setMensagem("[ERRO] - Tarefa não encontrada!");
+            mensagem.setSucesso(false);
+            return mensagem;
+        }
 
         Optional<UserModel> validarUsuarioExistente = userRepository.findByEmail(taskDto.getEmailUsuario());
         if(validarUsuarioExistente.isEmpty()){
@@ -93,7 +101,7 @@ public class TaskService {
 
         Optional<TaskModel> tarefaExistente = taskRepository.findById(tarefaId);
         if(tarefaExistente.isEmpty()){
-            mensagem.setMensagem("Usuário não encontrado");
+            mensagem.setMensagem("[ERRO] - Tarefa não encontrada");
             mensagem.setSucesso(false);
             return mensagem;
         }
