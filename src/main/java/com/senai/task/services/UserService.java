@@ -112,8 +112,8 @@ public class UserService {
             return mensagem;
         }
 
-        boolean temTarefa = taskRepository.existsByUserEmail(email);
-        if(!temTarefa){
+        boolean temTarefa = taskRepository.existsByUsuarioModel_Email(email);
+        if(temTarefa){
             mensagem.setMensagem("Usuário vinculado a uma tarefa!");
             mensagem.setSucesso(false);
             return mensagem;

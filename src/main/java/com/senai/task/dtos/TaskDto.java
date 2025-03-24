@@ -1,13 +1,14 @@
 package com.senai.task.dtos;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 
-import java.util.Date;
-
+import java.time.LocalDate;
 @Data
 public class TaskDto {
 
@@ -19,13 +20,14 @@ public class TaskDto {
     @NotBlank(message = "A descrição não pode estar vazia.")
     private String descricao;
 
-    @NotBlank(message = "A data não pode estar vazia.")
-    private Date dataAgendamento;
+    @NotNull(message = "A data não pode estar vazia.")
+    @Future(message = "A data deve ser no futuro.")
+    private LocalDate data;
 
     @Min(value = 1, message = "O valor minímo aceito é 1.")
     @Max(value = 4, message = "O valor máximo aceito é 4.")
     private Integer status;
 
-    @NotBlank(message = "O email não pode estar vazio.")
+    @NotBlank(message = "O email não pode ser vazio.")
     private String emailUsuario;
 }
