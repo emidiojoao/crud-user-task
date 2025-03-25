@@ -68,8 +68,10 @@ public class UserController {
 
         if(mensagem.getSucesso()){
             return ResponseEntity.ok().body(mensagem);
-        } else {
-            return ResponseEntity.status(404).body(mensagem);
         }
+        if(mensagem.getMensagem().equals("Usuário vinculado a uma tarefa!")){
+            return ResponseEntity.status(409).body(mensagem);
+        }
+        return ResponseEntity.status(404).body(mensagem);
     }
 }

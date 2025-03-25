@@ -40,14 +40,17 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<MensagemDto> criarTask(@RequestBody @Valid TaskDto taskDto){
+    public ResponseEntity<MensagemDto> criarTask(@RequestBody @Valid TaskDto taskDto) {
         MensagemDto mensagem = service.inserirTarefa(taskDto);
 
-        if(mensagem.getSucesso()){
+        if (mensagem.getSucesso()) {
             return ResponseEntity.ok().body(mensagem);
-        } else {
-            return ResponseEntity.status(404).body(mensagem);
         }
+        if (mensagem.getMensagem().equals("[ERRO] - Esse usuário ja tem uma tarefa agendada para essa data!")) {
+            return ResponseEntity.status(409).body(mensagem);
+        }
+        return ResponseEntity.status(404).body(mensagem);
+
     }
 
     @PutMapping("/{id}")
