@@ -10,11 +10,11 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
 
-    @NotBlank(message = "o campo nome não pode ser vazio!")
+    @NotBlank(message = "o campo nome não pode ser nulo!")
     private String nome;
 
     @Email
-    @NotBlank(message = "o email não pode ser vazio!")
+    @NotBlank(message = "o email não pode ser nulo!")
     private String email;
 
     @JsonIgnore

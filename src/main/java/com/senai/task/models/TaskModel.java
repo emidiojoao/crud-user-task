@@ -1,4 +1,5 @@
 package com.senai.task.models;
+import com.senai.task.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
@@ -18,10 +19,11 @@ public class TaskModel {
     private String descricao;
 
     @Column(name = "data_de_agendamento", nullable = false)
-    private LocalDate data;
+    private LocalDate dataAgendamento;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private int status;
+    private Status status;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")

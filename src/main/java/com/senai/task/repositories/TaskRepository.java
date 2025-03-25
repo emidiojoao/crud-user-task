@@ -13,5 +13,5 @@ public interface TaskRepository extends JpaRepository<TaskModel, Long> {
     //
     boolean existsByUsuarioModel_Email(String email);
 
-    Optional<TaskModel> findByDataAndUsuarioModel_Email(LocalDate data, String emailUsuario);
+    Optional<TaskModel> findByDataAgendamentoAndUsuarioModel_Email(LocalDate dataAgendamento, String emailUsuario);
 }

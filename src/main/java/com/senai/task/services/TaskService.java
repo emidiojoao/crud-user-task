@@ -33,12 +33,31 @@ public class TaskService {
             taskDto.setId(taskModel.getId());
             taskDto.setNome(taskModel.getNome());
             taskDto.setDescricao(taskModel.getDescricao());
-            taskDto.setData(taskModel.getData());
+            taskDto.setDataAgendamento(taskModel.getDataAgendamento());
             taskDto.setStatus(taskModel.getStatus());
             taskDto.setEmailUsuario(taskModel.getUsuarioModel().getEmail());
             listaTaskDto.add(taskDto);
         }
         return listaTaskDto;
+    }
+
+    public TaskDto obterTarefaPorID(Long id){
+        TaskDto taskDto = new TaskDto();
+
+        Optional<TaskModel> buscaTarefa = taskRepository.findById(id);
+        if(buscaTarefa.isEmpty()){
+            taskDto.setMensagem("[ERRO] - Usuário não encontrado");
+            return taskDto;
+        }
+
+        TaskModel taskModel = buscaTarefa.get();
+        taskDto.setNome(taskModel.getNome());
+        taskDto.setDescricao(taskModel.getDescricao());
+        taskDto.setDataAgendamento(taskModel.getDataAgendamento());
+        taskDto.setStatus(taskModel.getStatus());
+        taskDto.setEmailUsuario(taskModel.getUsuarioModel().getEmail());
+
+        return taskDto;
     }
 
     //--Inserir Tarefa
@@ -53,7 +72,7 @@ public class TaskService {
             return mensagem;
         }
 
-        Optional<TaskModel> validarDataExistente = taskRepository.findByDataAndUsuarioModel_Email(taskDto.getData(), taskDto.getEmailUsuario());
+        Optional<TaskModel> validarDataExistente = taskRepository.findByDataAgendamentoAndUsuarioModel_Email(taskDto.getDataAgendamento(), taskDto.getEmailUsuario());
         if(validarDataExistente.isPresent()){
             mensagem.setMensagem("[ERRO] - Esse usuário ja tem uma tarefa agendada para essa data!");
             mensagem.setSucesso(false);
@@ -62,7 +81,7 @@ public class TaskService {
 
         taskModel.setNome(taskDto.getNome());
         taskModel.setDescricao(taskDto.getDescricao());
-        taskModel.setData(taskDto.getData());
+        taskModel.setDataAgendamento(taskDto.getDataAgendamento());
         taskModel.setStatus(taskDto.getStatus());
         taskModel.setUsuarioModel(validarUsuarioExistente.get());
         taskRepository.save(taskModel);
@@ -75,7 +94,6 @@ public class TaskService {
     //--AtualizarTarefa
     public MensagemDto atualizarTarefa(Long id, TaskDto taskDto){
         MensagemDto mensagem = new MensagemDto();
-        TaskModel taskModel = new TaskModel();
 
         Optional<TaskModel> obterTarefaPorId = taskRepository.findById(id);
         if(obterTarefaPorId.isEmpty()){
@@ -91,15 +109,18 @@ public class TaskService {
             return mensagem;
         }
 
-        Optional<TaskModel> validarData = taskRepository.findByDataAndUsuarioModel_Email(taskDto.getData(), taskDto.getEmailUsuario());
+        Optional<TaskModel> validarData = taskRepository.findByDataAgendamentoAndUsuarioModel_Email(taskDto.getDataAgendamento(), taskDto.getEmailUsuario());
         if(validarData.isPresent()){
             mensagem.setMensagem("[ERRO] - Esse usuário ja possui uma tarefa para essa data!");
             mensagem.setSucesso(false);
+            return mensagem;
         }
+
+        TaskModel taskModel = obterTarefaPorId.get();
 
         taskModel.setNome(taskDto.getNome());
         taskModel.setDescricao(taskDto.getDescricao());
-        taskModel.setData(taskDto.getData());
+        taskModel.setDataAgendamento(taskDto.getDataAgendamento());
         taskModel.setStatus(taskDto.getStatus());
         taskModel.setUsuarioModel(validarUsuarioExistente.get());
         taskRepository.save(taskModel);
@@ -129,7 +150,7 @@ public class TaskService {
 
     //--Buscar tarefas existentes
     public Optional<TaskModel> buscarTarefaPorDataEmail(LocalDate data, String email){
-        return taskRepository.findByDataAndUsuarioModel_Email(data, email);
+        return taskRepository.findByDataAgendamentoAndUsuarioModel_Email(data, email);
     }
 
 

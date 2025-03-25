@@ -4,7 +4,6 @@ import com.senai.task.dtos.MensagemDto;
 import com.senai.task.dtos.TaskDto;
 import com.senai.task.services.TaskService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +26,17 @@ public class TaskController {
         } else {
             return ResponseEntity.ok().body(lista);
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskDto> obterTarefaPorId(@PathVariable Long id){
+        TaskDto taskDto = service.obterTarefaPorID(id);
+
+        if(taskDto.getMensagem() != null){
+            return ResponseEntity.status(404).body(taskDto);
+        }
+
+        return ResponseEntity.ok().body(taskDto);
     }
 
     @PostMapping
