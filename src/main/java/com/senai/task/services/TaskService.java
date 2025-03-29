@@ -110,7 +110,7 @@ public class TaskService {
         }
 
         Optional<TaskModel> validarData = taskRepository.findByDataAgendamentoAndUsuarioModel_Email(taskDto.getDataAgendamento(), taskDto.getEmailUsuario());
-        if(validarData.isPresent()){
+        if(validarData.isPresent() && !validarData.get().getId().equals(id)){
             mensagem.setMensagem("[ERRO] - Esse usuário ja possui uma tarefa para essa data!");
             mensagem.setSucesso(false);
             return mensagem;
